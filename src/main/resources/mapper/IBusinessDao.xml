@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ynu.edu.dao.IBusinessDao">
+
+    <!-- 定义Food的结果映射 -->
+    <resultMap id="FoodResultMap" type="ynu.edu.entity.Food">
+        <id property="foodId" column="foodId"/>
+        <result property="foodName" column="foodName"/>
+        <result property="foodExplain" column="foodExplain"/>
+        <result property="foodImg" column="foodImg"/>
+        <result property="foodPrice" column="foodPrice"/>
+        <result property="businessId" column="businessId"/>
+        <result property="remarks" column="remarks"/>
+    </resultMap>
+
+    <!-- Business的结果映射 -->
+    <resultMap id="BusinessResultMap" type="ynu.edu.entity.Business">
+        <id property="businessId" column="businessId"/>
+        <result property="businessName" column="businessName"/>
+        <result property="businessAddress" column="businessAddress"/>
+        <result property="businessExplain" column="businessExplain"/>
+        <result property="businessImg" column="businessImg"/>
+        <result property="orderTypeId" column="orderTypeId"/>
+        <result property="starPrice" column="starPrice"/>
+        <result property="deliveryPrice" column="deliveryPrice"/>
+        <result property="remarks" column="remarks"/>
+    </resultMap>
+
+    <!-- 根据点餐分类查询商家 -->
+    <select id="listBusinessByOrderTypeId" resultType="ynu.edu.entity.Business">
+        SELECT * FROM business
+        WHERE orderTypeId = #{orderTypeId}
+        ORDER BY businessId
+    </select>
+
+    <!-- 根据商家ID查询商家信息 -->
+    <select id="getBusinessById" resultType="ynu.edu.entity.Business">
+        SELECT * FROM business WHERE businessId = #{businessId}
+    </select>
+</mapper>

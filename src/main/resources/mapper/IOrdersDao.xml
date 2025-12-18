@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ynu.edu.dao.IOrdersDao">
+
+    <!-- 定义OrderDetailet的结果映射 -->
+    <resultMap id="OrderDetailetResultMap" type="ynu.edu.entity.OrderDetailet">
+        <id property="odId" column="odId"/>
+        <result property="orderId" column="orderId"/>
+        <result property="foodId" column="foodId"/>
+        <result property="quantity" column="quantity"/>
+
+        <!-- 关联食品信息 -->
+        <association property="food" javaType="ynu.edu.entity.Food">
+            <id property="foodId" column="foodId"/>
+            <result property="foodName" column="foodName"/>
+            <result property="foodPrice" column="foodPrice"/>
+        </association>
+    </resultMap>
+
+    <!-- 定义Orders的结果映射 -->
+    <resultMap id="OrdersResultMap" type="ynu.edu.entity.Orders">
+        <id column="orderId" property="orderId"/>
+        <result column="userId" property="userId"/>
+        <result column="businessId" property="businessId"/>
+        <result column="orderDate" property="orderDate"/>
+        <result column="orderTotal" property="orderTotal"/>
+        <result column="daId" property="daId"/>
+        <result column="orderState" property="orderState"/>
+
+        <!-- 关联商家信息 -->
+        <association property="business" javaType="ynu.edu.entity.Business">
+            <id property="businessId" column="businessId"/>
+            <result property="businessName" column="businessName"/>
+        </association>
+
+        <!-- 关联订单明细 -->
+        <collection property="list" ofType="ynu.edu.entity.OrderDetailet"
+                    resultMap="OrderDetailetResultMap" columnPrefix="od_"/>
+    </resultMap>
+
+    <!-- 根据用户ID查询订单 -->
+    <select id="findOrdersByUserId" parameterType="String" resultMap="OrdersResultMap">
+        SELECT
+            o.*,
+            b.businessName,
+            od.odId as od_odId,
+            od.orderId as od_orderId,
+            od.foodId as od_foodId,
+            od.quantity as od_quantity,
+            f.foodName as od_foodName,
+            f.foodPrice as od_foodPrice
+        FROM orders o
+                 LEFT JOIN business b ON o.businessId = b.businessId
+                 LEFT JOIN orderdetailet od ON o.orderId = od.orderId
+                 LEFT JOIN food f ON od.foodId = f.foodId
+        WHERE o.userId = #{userId}
+        ORDER BY o.orderId
+    </select>
+
+    <!-- 根据用户ID和订单状态查询 -->
+    <select id="findOrdersByUserAndState" resultMap="OrdersResultMap">
+        SELECT
+            o.*,
+            b.businessName,
+            od.odId as od_odId,
+            od.orderId as od_orderId,
+            od.foodId as od_foodId,
+            od.quantity as od_quantity,
+            f.foodName as od_foodName,
+            f.foodPrice as od_foodPrice
+        FROM orders o
+                 LEFT JOIN business b ON o.businessId = b.businessId
+                 LEFT JOIN orderdetailet od ON o.orderId = od.orderId
+                 LEFT JOIN food f ON od.foodId = f.foodId
+        WHERE o.userId = #{userId} AND o.orderState = #{orderState}
+        ORDER BY o.orderId
+    </select>
+
+    <!-- 获取用户的历史订单（已支付和未支付） -->
+    <select id="findOrderHistory" parameterType="String" resultMap="OrdersResultMap">
+        SELECT
+            o.*,
+            b.businessName,
+            od.odId as od_odId,
+            od.orderId as od_orderId,
+            od.foodId as od_foodId,
+            od.quantity as od_quantity,
+            f.foodName as od_foodName,
+            f.foodPrice as od_foodPrice
+        FROM orders o
+                 LEFT JOIN business b ON o.businessId = b.businessId
+                 LEFT JOIN orderdetailet od ON o.orderId = od.orderId
+                 LEFT JOIN food f ON od.foodId = f.foodId
+        WHERE o.userId = #{userId}
+        ORDER BY o.orderId
+    </select>
+</mapper>
