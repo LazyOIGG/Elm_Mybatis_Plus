@@ -15,4 +15,15 @@
     <select id="listOrderDetailetByOrderId" parameterType="Integer" resultType="ynu.edu.entity.OrderDetailet">
         SELECT * FROM orderDetailet WHERE orderId = #{orderId}
     </select>
+
+    <!-- 根据订单ID查询订单明细（简单的查询） -->
+    <select id="listOrderDetailetByOrderIdSimple" parameterType="Integer" resultType="ynu.edu.entity.OrderDetailet">
+        SELECT * FROM orderDetailet WHERE orderId = #{orderId}
+    </select>
+
+    <!-- 根据订单ID和食品ID查询明细 -->
+    <select id="getOrderDetailetByIds" resultType="ynu.edu.entity.OrderDetailet">
+        SELECT * FROM orderDetailet
+        WHERE orderId = #{orderId} AND foodId = #{foodId}
+    </select>
 </mapper>

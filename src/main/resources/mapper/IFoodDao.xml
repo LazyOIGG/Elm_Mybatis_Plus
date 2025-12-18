@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ynu.edu.dao.IFoodDao">
+
+    <!-- 根据商家ID查询食品列表 -->
+    <select id="listFoodByBusinessId" parameterType="Integer" resultType="ynu.edu.entity.Food">
+        SELECT * FROM food
+        WHERE businessId = #{businessId}
+        ORDER BY foodId
+    </select>
+
+    <!-- 根据食品ID查询食品信息 -->
+    <select id="getFoodById" parameterType="Integer" resultType="ynu.edu.entity.Food">
+        SELECT * FROM food WHERE foodId = #{foodId}
+    </select>
+
+    <!-- 根据商家ID和食品名称模糊查询 -->
+    <select id="listFoodByBusinessIdAndName" resultType="ynu.edu.entity.Food">
+        SELECT * FROM food
+        WHERE businessId = #{businessId}
+          AND foodName LIKE CONCAT('%', #{foodName}, '%')
+        ORDER BY foodId
+    </select>
+
+</mapper>

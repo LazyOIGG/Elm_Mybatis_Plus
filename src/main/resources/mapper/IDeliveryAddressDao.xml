@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ynu.edu.dao.IDeliveryAddressDao">
+
+    <!-- 根据用户ID查询送货地址列表 -->
+    <select id="listDeliveryAddressByUserId" parameterType="String" resultType="ynu.edu.entity.DeliveryAddress">
+        SELECT * FROM deliveryaddress
+        WHERE userId = #{userId}
+        ORDER BY daId
+    </select>
+
+    <!-- 根据地址ID查询送货地址详情 -->
+    <select id="getDeliveryAddressById" parameterType="Integer" resultType="ynu.edu.entity.DeliveryAddress">
+        SELECT * FROM deliveryaddress WHERE daId = #{daId}
+    </select>
+
+    <!-- 保存送货地址 -->
+    <insert id="saveDeliveryAddress" parameterType="ynu.edu.entity.DeliveryAddress" useGeneratedKeys="true" keyProperty="daId">
+        INSERT INTO deliveryaddress(contactName, contactSex, contactTel, address, userId)
+        VALUES(#{contactName}, #{contactSex}, #{contactTel}, #{address}, #{userId})
+    </insert>
+
+    <!-- 更新送货地址 -->
+    <update id="updateDeliveryAddress" parameterType="ynu.edu.entity.DeliveryAddress">
+        UPDATE deliveryaddress
+        SET contactName = #{contactName},
+            contactSex = #{contactSex},
+            contactTel = #{contactTel},
+            address = #{address}
+        WHERE daId = #{daId}
+    </update>
+
+    <!-- 删除送货地址 -->
+    <delete id="removeDeliveryAddress" parameterType="Integer">
+        DELETE FROM deliveryaddress WHERE daId = #{daId}
+    </delete>
+
+</mapper>

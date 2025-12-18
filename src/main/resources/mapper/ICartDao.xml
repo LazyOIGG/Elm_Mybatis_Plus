@@ -45,4 +45,28 @@
             </if>
         </where>
     </delete>
+
+    <!-- 查询购物车总数量 -->
+    <select id="getCartCount" parameterType="String" resultType="Integer">
+        SELECT COUNT(*) FROM cart WHERE userId = #{userId}
+    </select>
+
+    <!-- 查询购物车总金额 -->
+    <select id="getCartTotal" parameterType="String" resultType="Double">
+        SELECT SUM(c.quantity * f.foodPrice)
+        FROM cart c
+                 JOIN food f ON c.foodId = f.foodId
+        WHERE c.userId = #{userId}
+    </select>
+
+    <!-- 清空用户购物车 -->
+    <delete id="clearCart" parameterType="String">
+        DELETE FROM cart WHERE userId = #{userId}
+    </delete>
+
+    <!-- 根据用户ID和商家ID清空购物车 -->
+    <delete id="clearCartByBusiness">
+        DELETE FROM cart
+        WHERE userId = #{userId} AND businessId = #{businessId}
+    </delete>
 </mapper>

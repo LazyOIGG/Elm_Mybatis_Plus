@@ -38,4 +38,24 @@
     <select id="getBusinessById" resultType="ynu.edu.entity.Business">
         SELECT * FROM business WHERE businessId = #{businessId}
     </select>
+
+    <!-- 查询所有商家 -->
+    <select id="listAllBusiness" resultType="ynu.edu.entity.Business">
+        SELECT * FROM business ORDER BY businessId
+    </select>
+
+    <!-- 根据商家名称模糊查询 -->
+    <select id="listBusinessByName" parameterType="String" resultType="ynu.edu.entity.Business">
+        SELECT * FROM business
+        WHERE businessName LIKE CONCAT('%', #{businessName}, '%')
+        ORDER BY businessId
+    </select>
+
+    <!-- 根据订单类型ID和商家名称组合查询 -->
+    <select id="listBusinessByOrderTypeIdAndName" resultType="ynu.edu.entity.Business">
+        SELECT * FROM business
+        WHERE orderTypeId = #{orderTypeId}
+          AND businessName LIKE CONCAT('%', #{businessName}, '%')
+        ORDER BY businessId
+    </select>
 </mapper>

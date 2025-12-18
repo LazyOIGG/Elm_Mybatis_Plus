@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ynu.edu.dao.IUserDao">
+
+    <!-- 根据用户ID和密码查询用户 -->
+    <select id="getUserByIdByPass" parameterType="ynu.edu.entity.User" resultType="ynu.edu.entity.User">
+        SELECT * FROM user
+        WHERE userId = #{userId} AND password = #{password}
+    </select>
+
+    <!-- 根据用户ID查询用户是否存在 -->
+    <select id="getUserById" parameterType="String" resultType="Integer">
+        SELECT COUNT(*) FROM user WHERE userId = #{userId}
+    </select>
+
+    <!-- 保存用户（注册） -->
+    <insert id="saveUser" parameterType="ynu.edu.entity.User">
+        INSERT INTO user(userId, password, userName, userSex, userImg, delTag)
+        VALUES(#{userId}, #{password}, #{userName}, #{userSex}, '', 0)
+    </insert>
+
+    <!-- 根据用户ID查询用户信息 -->
+    <select id="getUserByIdInfo" parameterType="String" resultType="ynu.edu.entity.User">
+        SELECT * FROM user WHERE userId = #{userId}
+    </select>
+
+    <!-- 更新用户信息 -->
+    <update id="updateUser" parameterType="ynu.edu.entity.User">
+        UPDATE user
+        SET userName = #{userName}, userSex = #{userSex}
+        WHERE userId = #{userId}
+    </update>
+
+</mapper>
