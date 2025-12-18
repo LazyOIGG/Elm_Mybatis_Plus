@@ -15,5 +15,6 @@ public class Food {
     private String foodImg;
     private Double foodPrice;
     private String remarks;
+    private Integer businessId;
     private Business business;
 }
