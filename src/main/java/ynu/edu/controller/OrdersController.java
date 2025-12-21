@@ -80,7 +80,8 @@ public class OrdersController {
     @PostMapping("/payOrders")
     @Operation(summary = "支付订单", description = "根据订单编号进行支付")
     public ResponseEntity<Integer> payOrders(
-            @Parameter(description = "订单ID", required = true) @RequestParam Integer orderId) {
+            @Parameter(description = "订单ID", required = true)
+            @RequestParam("orderId") Integer orderId) {  // 添加明确的参数名
         try {
             boolean success = ordersService.payOrders(orderId);
             return ResponseEntity.ok(success ? 1 : 0);
