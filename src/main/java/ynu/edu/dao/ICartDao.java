@@ -10,7 +10,7 @@ import java.util.List;
 @Mapper
 public interface ICartDao extends BaseMapper<Cart> {
     // 查询购物车（可根据条件查询）
-    List<Cart> listCart(@Param("cart") Cart cart);
+    List<Cart> listCart(Cart cart);
 
     // 保存购物车项
     int saveCart(Cart cart);
