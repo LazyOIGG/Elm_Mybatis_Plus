@@ -3,27 +3,37 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ynu.edu.dao.IOrderDetailetDao">
 
-    <!-- 批量保存订单明细 -->
+    <resultMap id="OrderDetailetWithFoodResultMap" type="ynu.edu.entity.OrderDetailet">
+        <id property="odId" column="odId"/>
+        <result property="orderId" column="orderId"/>
+        <result property="foodId" column="foodId"/>
+        <result property="quantity" column="quantity"/>
+
+        <!-- 关联食品信息 -->
+        <association property="food" javaType="ynu.edu.entity.Food">
+            <id property="foodId" column="foodId"/>
+            <result property="foodName" column="foodName"/>
+            <result property="foodPrice" column="foodPrice"/>
+            <result property="foodImg" column="foodImg"/>
+        </association>
+    </resultMap>
+
+    <!-- 根据订单ID查询订单明细 -->
+    <select id="getOrderDetailetByOrderId" parameterType="Integer"
+            resultMap="OrderDetailetWithFoodResultMap">
+        SELECT od.*, f.foodName, f.foodPrice, f.foodImg
+        FROM orderdetailet od
+                 LEFT JOIN food f ON od.foodId = f.foodId
+        WHERE od.orderId = #{orderId}
+    </select>
+
+    <!-- 批量插入订单明细 -->
     <insert id="saveOrderDetailetBatch" parameterType="java.util.List">
-        INSERT INTO orderDetailet(orderId, foodId, quantity) VALUES
-        <foreach collection="list" item="od" separator=",">
-            (#{od.orderId}, #{od.foodId}, #{od.quantity})
+        INSERT INTO orderdetailet(orderId, foodId, quantity)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.orderId}, #{item.foodId}, #{item.quantity})
         </foreach>
     </insert>
 
-    <!-- 根据订单ID查询订单明细 -->
-    <select id="listOrderDetailetByOrderId" parameterType="Integer" resultType="ynu.edu.entity.OrderDetailet">
-        SELECT * FROM orderDetailet WHERE orderId = #{orderId}
-    </select>
-
-    <!-- 根据订单ID查询订单明细（简单的查询） -->
-    <select id="listOrderDetailetByOrderIdSimple" parameterType="Integer" resultType="ynu.edu.entity.OrderDetailet">
-        SELECT * FROM orderDetailet WHERE orderId = #{orderId}
-    </select>
-
-    <!-- 根据订单ID和食品ID查询明细 -->
-    <select id="getOrderDetailetByIds" resultType="ynu.edu.entity.OrderDetailet">
-        SELECT * FROM orderDetailet
-        WHERE orderId = #{orderId} AND foodId = #{foodId}
-    </select>
 </mapper>

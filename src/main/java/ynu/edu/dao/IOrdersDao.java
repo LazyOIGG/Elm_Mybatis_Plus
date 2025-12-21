@@ -20,4 +20,7 @@ public interface IOrdersDao extends BaseMapper<Orders> {
 
     // 获取用户的历史订单（已支付和未支付）
     List<Orders> findOrderHistory(@Param("userId") String userId);
+
+    // 根据订单ID查询订单详情（包含关联信息）
+    List<Orders> findOrdersByIdWithDetails(@Param("orderId") Integer orderId);
 }

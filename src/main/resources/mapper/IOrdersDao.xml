@@ -15,6 +15,7 @@
             <id property="foodId" column="foodId"/>
             <result property="foodName" column="foodName"/>
             <result property="foodPrice" column="foodPrice"/>
+            <result property="foodImg" column="foodImg"/>
         </association>
     </resultMap>
 
@@ -32,30 +33,51 @@
         <association property="business" javaType="ynu.edu.entity.Business">
             <id property="businessId" column="businessId"/>
             <result property="businessName" column="businessName"/>
+            <result property="deliveryPrice" column="deliveryPrice"/>
         </association>
 
         <!-- 关联订单明细 -->
         <collection property="list" ofType="ynu.edu.entity.OrderDetailet"
-                    resultMap="OrderDetailetResultMap" columnPrefix="od_"/>
+                    resultMap="OrderDetailetResultMap"/>
     </resultMap>
+
+    <!-- 根据订单ID查询订单详情（包含关联信息） -->
+    <select id="findOrdersByIdWithDetails" parameterType="Integer" resultMap="OrdersResultMap">
+        SELECT
+            o.*,
+            b.businessName,
+            b.deliveryPrice,
+            od.odId,
+            od.orderId,
+            od.foodId,
+            od.quantity,
+            f.foodName,
+            f.foodPrice,
+            f.foodImg
+        FROM orders o
+                 LEFT JOIN business b ON o.businessId = b.businessId
+                 LEFT JOIN orderdetailet od ON o.orderId = od.orderId
+                 LEFT JOIN food f ON od.foodId = f.foodId
+        WHERE o.orderId = #{orderId}
+    </select>
 
     <!-- 根据用户ID查询订单 -->
     <select id="findOrdersByUserId" parameterType="String" resultMap="OrdersResultMap">
         SELECT
             o.*,
             b.businessName,
-            od.odId as od_odId,
-            od.orderId as od_orderId,
-            od.foodId as od_foodId,
-            od.quantity as od_quantity,
-            f.foodName as od_foodName,
-            f.foodPrice as od_foodPrice
+            od.odId,
+            od.orderId,
+            od.foodId,
+            od.quantity,
+            f.foodName,
+            f.foodPrice
         FROM orders o
                  LEFT JOIN business b ON o.businessId = b.businessId
                  LEFT JOIN orderdetailet od ON o.orderId = od.orderId
                  LEFT JOIN food f ON od.foodId = f.foodId
         WHERE o.userId = #{userId}
-        ORDER BY o.orderId
+        ORDER BY o.orderId DESC
     </select>
 
     <!-- 根据用户ID和订单状态查询 -->
@@ -63,18 +85,18 @@
         SELECT
             o.*,
             b.businessName,
-            od.odId as od_odId,
-            od.orderId as od_orderId,
-            od.foodId as od_foodId,
-            od.quantity as od_quantity,
-            f.foodName as od_foodName,
-            f.foodPrice as od_foodPrice
+            od.odId,
+            od.orderId,
+            od.foodId,
+            od.quantity,
+            f.foodName,
+            f.foodPrice
         FROM orders o
                  LEFT JOIN business b ON o.businessId = b.businessId
                  LEFT JOIN orderdetailet od ON o.orderId = od.orderId
                  LEFT JOIN food f ON od.foodId = f.foodId
         WHERE o.userId = #{userId} AND o.orderState = #{orderState}
-        ORDER BY o.orderId
+        ORDER BY o.orderId DESC
     </select>
 
     <!-- 获取用户的历史订单（已支付和未支付） -->
@@ -82,47 +104,18 @@
         SELECT
             o.*,
             b.businessName,
-            od.odId as od_odId,
-            od.orderId as od_orderId,
-            od.foodId as od_foodId,
-            od.quantity as od_quantity,
-            f.foodName as od_foodName,
-            f.foodPrice as od_foodPrice
+            od.odId,
+            od.orderId,
+            od.foodId,
+            od.quantity,
+            f.foodName,
+            f.foodPrice
         FROM orders o
                  LEFT JOIN business b ON o.businessId = b.businessId
                  LEFT JOIN orderdetailet od ON o.orderId = od.orderId
                  LEFT JOIN food f ON od.foodId = f.foodId
         WHERE o.userId = #{userId}
-        ORDER BY o.orderId
+        ORDER BY o.orderId DESC
     </select>
 
-    <!-- 创建订单 -->
-    <insert id="createOrders" parameterType="ynu.edu.entity.Orders" useGeneratedKeys="true" keyProperty="orderId">
-        INSERT INTO orders(userId, businessId, orderDate, orderTotal, daId, orderState)
-        VALUES(#{userId}, #{businessId}, NOW(), #{orderTotal}, #{daId}, 0)
-    </insert>
-
-    <!-- 根据订单ID查询订单 -->
-    <select id="getOrdersById" parameterType="Integer" resultType="ynu.edu.entity.Orders">
-        SELECT * FROM orders WHERE orderId = #{orderId}
-    </select>
-
-    <!-- 根据用户ID查询订单列表 -->
-    <select id="listOrdersByUserId" parameterType="String" resultType="ynu.edu.entity.Orders">
-        SELECT * FROM orders
-        WHERE userId = #{userId}
-        ORDER BY orderId DESC
-    </select>
-
-    <!-- 更新订单状态 -->
-    <update id="updateOrderState" parameterType="map">
-        UPDATE orders SET orderState = #{orderState} WHERE orderId = #{orderId}
-    </update>
-
-    <!-- 根据用户ID和订单状态查询 -->
-    <select id="listOrdersByUserIdAndState" resultType="ynu.edu.entity.Orders">
-        SELECT * FROM orders
-        WHERE userId = #{userId} AND orderState = #{orderState}
-        ORDER BY orderId DESC
-    </select>
 </mapper>

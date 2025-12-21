@@ -9,9 +9,9 @@ import java.util.List;
 
 @Mapper
 public interface IOrderDetailetDao extends BaseMapper<OrderDetailet> {
-    // 批量保存订单明细
-    int saveOrderDetailetBatch(@Param("list") List<OrderDetailet> list);
-
     // 根据订单ID查询订单明细
-    List<OrderDetailet> listOrderDetailetByOrderId(@Param("orderId") Integer orderId);
+    List<OrderDetailet> getOrderDetailetByOrderId(@Param("orderId") Integer orderId);
+
+    // 批量保存订单明细（原来的方法保留）
+    int saveOrderDetailetBatch(@Param("list") List<OrderDetailet> list);
 }
