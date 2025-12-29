@@ -36,4 +36,11 @@ public class BusinessController {
         Business result = businessService.getBusinessById(business.getBusinessId());
         return ResponseEntity.ok(result);
     }
+
+    @PostMapping("/listAllBusiness")
+    @Operation(summary = "获取所有商家", description = "查询所有商家信息")
+    public ResponseEntity<List<Business>> listAllBusiness() throws Exception {
+        List<Business> businessList = businessService.listAllBusiness();
+        return ResponseEntity.ok(businessList);
+    }
 }

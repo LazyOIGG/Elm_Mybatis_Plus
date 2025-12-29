@@ -23,4 +23,9 @@ public class BusinessServiceImpl implements IBusinessService {
     public Business getBusinessById(Integer businessId) {
         return businessDao.getBusinessById(businessId);
     }
+
+    @Override
+    public List<Business> listAllBusiness() {
+        return businessDao.listAllBusiness();
+    }
 }

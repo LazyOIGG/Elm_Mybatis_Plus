@@ -14,4 +14,6 @@ public interface IBusinessDao extends BaseMapper<Business> {
 
     // 2. 根据商家ID查询商家信息
     Business getBusinessById(@Param("businessId") Integer businessId);
+
+    List<Business> listAllBusiness();
 }

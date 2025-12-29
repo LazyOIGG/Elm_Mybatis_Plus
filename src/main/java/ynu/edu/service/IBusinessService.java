@@ -13,4 +13,7 @@ public interface IBusinessService {
      * 根据商家ID查询商家信息
      */
     Business getBusinessById(Integer businessId);
+
+    List<Business> listAllBusiness();
+
 }
